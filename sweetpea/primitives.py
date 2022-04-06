@@ -774,7 +774,8 @@ class DerivationWindow:
     :type width: int
 
     :param stride:
-        TODO DOC
+        The number of trials to move forward by when the window moves. The
+        size of the stride must be greater than or equal to ``1``.
     :type stride: int
     """
 
