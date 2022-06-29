@@ -184,29 +184,30 @@ def print_experiments(block: Block, experiments: List[dict]):
 def tabulate_experiments(experiments: List[Dict],
                          factors: Optional[List[Factor]] = None,
                          trials: Optional[List[int]] = None):
-    """Tabulates and prints the given experiments in a human-friendly form.
+    """Tabulates and prints the given trial sequences in a human-friendly form.
     Outputs a table that shows the absolute and relative frequencies of
     combinations of factor levels.
 
     :param experiments:
-        A list of experiments as :class:`dicts <dict>`. These are produced by
-        calls to any of the synthesis functions (:func:`.synthesize_trials`,
+        A list of trial sequences where each sequence is a :class:`dicts <dict>`.
+        This list is produced by calls to any of the synthesis functions
+        (:func:`.synthesize_trials`,
         :func:`.synthesize_trials_non_uniform`, or
         :func:`.synthesize_trials_uniform`).
 
     :param factors:
-        An optional :class:`list` of :class:`Factors <.Factor>`...
-
-        .. todo::
-
-            Finish specification of this parameter.
+        An optional, though practically needed :class:`list` of :class:`Factors <.Factor>`.
+        This list selects the factors of interest that are subsets of
+        the design factors. More precisely, the names of these factors
+        must be a subset of the design factor's names. (Given that :func:`.syntheseize_trials`
+        reports results in terms of factor and level names, the design's factor and
+        level objects no longer matter).
 
     :param trials:
-        An optional :class:`list` of :class:`ints <int>`...
+        An optional :class:`list` of :class:`ints <int>` that specifies the indices of trials to
+        be tabulated with the same indices being applied for every sequence. The paramater's
+        default is to include all trials in the tabulation.
 
-        .. todo::
-
-            Finish specification of this parameter.
     """
     if factors is None:
         factors = []
@@ -339,9 +340,11 @@ def synthesize_trials_non_uniform(block: Block, samples: int) -> List[dict]:
         The number of trial sets to generate.
 
     :returns:
-        A :class:`list` of trial sets. Each set is represented as a
+        A :class:`list` of trial sequences. Each sequence is represented as a
         :class:`dictionary <dict>` mapping each factor name to a list of
-        levels, where each such list contains to one level per trial.
+        levels, where each such list contains one level per trial. Lists for
+        different factor names have the same length, where the first level in
+        each list corresponds to the first trial in the sequence, and so on.
     """
     if block.complex_factors_or_constraints:
         return synthesize_trials(block, samples, sampling_strategy=NonUniformSamplingStrategy)
